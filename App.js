@@ -10,7 +10,6 @@ import Strategy from './Screens/Strategy';
 import Prompt from './Screens/Prompt';
 
 const Stack = createStackNavigator();
-//
 export default function App() {
   return (
     <NavigationContainer>
