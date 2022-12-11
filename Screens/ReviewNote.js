@@ -1,27 +1,39 @@
 import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { db } from '../firebaseConfig';
 import { collection, getDocs, where, query } from 'firebase/firestore';
 
 const ReviewNote =(props)=>{
+    const [text, setText] = useState();
 
     const ReviewDB = async ()=>{
         const studentId = props.route.params.studentId;
         const testId = props.route.params.testId;
         const q = await query( collection(db, "AnswerStudent"), where('testId',"==", testId))
-            const ReadTest = await getDocs(q);
-            let ChoiceTest;
+        const answer = await getDocs(q);
+        let mark;
+        let score;
+        //채점 상태 확인
+        answer.docs.map((row, idx) =>{
+            mark = row.data().markState;
+            score = row.data().score;
+        })
 
-            //활성화된 test확인
-            ReadTest.docs.map((row, idx) =>{
-                setTestNum(row.data().testId) //최종 test DB 저장 
-                ChoiceTest = row.data().testId;
-            })
+        if(mark==false){ //채점중
+            setText("The teacher is marking. Please wait...")
+        }else{ 
+            setText("["+testId+"]Your Score: "+score)
+        }
     }
+
+    useEffect(()=>{
+        ReviewDB()
+    },[])
+
 
     return(
     <View style={styles.mainView}>
-        <Text>Review</Text>
+        <Text>{text}</Text>
     </View>
     );
 }

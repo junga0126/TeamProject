@@ -118,11 +118,11 @@ const Home =(props)=>{
     return(
         <View style={styles.mainView}>
             <Button
-                title = 'Test'
+                title = 'Start Test'
                 onPress={TestDB}
             />
             <Button
-                title = 'ReviewNote'
+                title = 'Check Score'
                 onPress={ReviewDB}
             />
         </View>
