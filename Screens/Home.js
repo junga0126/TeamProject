@@ -38,7 +38,7 @@ const Home =(props)=>{
             const q = await query( collection(db, "Test"), where('state',"==", "true"))
             const ReadTest = await getDocs(q);
             //활성화된 test확인
-            ReadTest.docs.map((row, idx) =>{
+            ReadTest.docs.map((row, idx) =>{~
                 setTestNum(row.data().testId) //최종 test DB 저장 
                 ChoiceTest = row.data().testId;
             })

@@ -91,53 +91,120 @@ const Prompt =(props)=>{
                 promptIdx    0-(1번 prompt), 1-(2번 prompt)  2-(3번 prompt)    
             */
 
+            let q1_A_p1, q1_A_p2, q1_A_p3, q1_A_p4, q1_A_p5;
+            let q1_B_p1, q1_B_p2, q1_B_p3, q1_B_p4;
+            let q1_C_p1, q1_C_p2, q1_C_p3, q1_C_p4;
+            let q2_A_p1, q2_A_p2, q2_A_p3, q2_A_p4, q2_A_p5;
+            let q2_B_p1, q2_B_p2, q2_B_p3, q2_B_p4;
+            let q2_C_p1, q2_C_p2, q2_C_p3, q2_C_p4;                   
+            let q3_A_p1, q3_A_p2, q3_A_p3, q3_A_p4, q3_A_p5;
+            let q3_B_p1, q3_B_p2, q3_B_p3, q3_B_p4;
+            let q3_C_p1, q3_C_p2, q3_C_p3, q3_C_p4;
+
+            const q2 = await query( collection(db, "Answer"), where('testId',"==", testId)) 
+            const mark = await getDocs(q2); //test id일치 답안지
+            mark.docs.map((row, idx)=>{  
+                q1_A_p1 = row.data().q1_A_p1;
+                q1_A_p2 = row.data().q1_A_p2;
+                q1_A_p3 = row.data().q1_A_p3;
+                q1_A_p4 = row.data().q1_A_p4;
+                q1_A_p5 = row.data().q1_A_p5;
+                q1_B_p1 = row.data().q1_B_p1;
+                q1_B_p2 = row.data().q1_B_p2;
+                q1_B_p3 = row.data().q1_B_p3;
+                q1_B_p4 = row.data().q1_B_p4;
+                q1_C_p1 = row.data().q1_C_p1;
+                q1_C_p2 = row.data().q1_C_p2;
+                q1_C_p3 = row.data().q1_C_p3;
+                q1_C_p4 = row.data().q1_C_p4;
+                q2_A_p1 = row.data().q2_A_p1;
+                q2_A_p2 = row.data().q2_A_p2;
+                q2_A_p3 = row.data().q2_A_p3;
+                q2_A_p4 = row.data().q2_A_p4;
+                q2_A_p5 = row.data().q2_A_p5;
+                q2_B_p1 = row.data().q2_B_p1;
+                q2_B_p2 = row.data().q2_B_p2;
+                q2_B_p3 = row.data().q2_B_p3;
+                q2_B_p4 = row.data().q2_B_p4;
+                q2_C_p1 = row.data().q2_C_p1;
+                q2_C_p2 = row.data().q2_C_p2;
+                q2_C_p3 = row.data().q2_C_p3;
+                q2_C_p4 = row.data().q2_C_p4;
+                q3_A_p1 = row.data().q3_A_p1;
+                q3_A_p2 = row.data().q3_A_p2;
+                q3_A_p3 = row.data().q3_A_p3;
+                q3_A_p4 = row.data().q3_A_p4;
+                q3_A_p5 = row.data().q3_A_p5;
+                q3_B_p1 = row.data().q3_B_p1;
+                q3_B_p2 = row.data().q3_B_p2;
+                q3_B_p3 = row.data().q3_B_p3;
+                q3_B_p4 = row.data().q3_B_p4;
+                q3_C_p1 = row.data().q3_C_p1;
+                q3_C_p2 = row.data().q3_C_p2;
+                q3_C_p3 = row.data().q3_C_p3;
+                q3_C_p4 = row.data().q3_C_p4;
+            })
+
             if(Count==3){ //1번문제
                 if(strategyId==0){ //A전략
                     switch(promptIdx){
                         case 0: 
                             await updateDoc(docRef, { q1_A_p1: promptAnswer });
+                            if(promptAnswer!=q1_A_p1) alert("[wrong answer]: "+q1_A_p1);
                             break;
                         case 1: 
                             await updateDoc(docRef, { q1_A_p2: promptAnswer });
+                            if(promptAnswer!=q1_A_p2) alert("[wrong answer]: "+q1_A_p2);
                             break;
                         case 2: 
                             await updateDoc(docRef, { q1_A_p3: promptAnswer });
+                            if(promptAnswer!=q1_A_p3) alert("[wrong answer]: "+q1_A_p3);
                             break;
                         case 3:
                             await updateDoc(docRef, { q1_A_p4: promptAnswer });
+                            if(promptAnswer!=q1_A_p4) alert("[wrong answer]: "+q1_A_p4);
                             break;
                         case 4: 
                             await updateDoc(docRef, { q1_A_p5: promptAnswer });
+                            if(promptAnswer!=q1_A_p5) alert("[wrong answer]: "+q1_A_p5);
                             break;
                     }
                 }else if(strategyId==1){ //B전략
                     switch(promptIdx){
                         case 0: 
                             await updateDoc(docRef, { q1_B_p1: promptAnswer });
+                            if(promptAnswer!=q1_B_p1) alert("[wrong answer]: "+q1_B_p1);
                             break;
                         case 1: 
                             await updateDoc(docRef, { q1_B_p2: promptAnswer });
+                            if(promptAnswer!=q1_B_p2) alert("[wrong answer]: "+q1_B_p2);
                             break;
                         case 2: 
                             await updateDoc(docRef, { q1_B_p3: promptAnswer });
+                            if(promptAnswer!=q1_B_p3) alert("[wrong answer]: "+q1_B_p3);
                             break;
                         case 3:
                             await updateDoc(docRef, { q1_B_p4: promptAnswer });
+                            if(promptAnswer!=q1_B_p4) alert("[wrong answer]: "+q1_B_p4);
                             break;
                     }
                 }else if(strategyId==2){ //C전략
                     switch(promptIdx){
                         case 0: 
                             await updateDoc(docRef, { q1_C_p1: promptAnswer });
+                            if(promptAnswer!=q1_C_p1) alert("[wrong answer]: "+q1_C_p1);
                             break;
                         case 1: 
                             await updateDoc(docRef, { q1_C_p2: promptAnswer });
+                            if(promptAnswer!=q1_C_p2) alert("[wrong answer]: "+q1_C_p2);
                             break;
                         case 2: 
                             await updateDoc(docRef, { q1_C_p3: promptAnswer });
+                            if(promptAnswer!=q1_C_p3) alert("[wrong answer]: "+q1_C_p3);
                             break;
                         case 3:
                             await updateDoc(docRef, { q1_C_p4: promptAnswer });
+                            if(promptAnswer!=q1_C_p4) alert("[wrong answer]: "+q1_C_p4);
                             break;
                     }
                 }
@@ -146,48 +213,61 @@ const Prompt =(props)=>{
                     switch(promptIdx){
                         case 0: 
                             await updateDoc(docRef, { q2_A_p1: promptAnswer });
+                            if(promptAnswer!=q2_A_p1) alert("[wrong answer]: "+q2_A_p1);
                             break;
                         case 1: 
                             await updateDoc(docRef, { q2_A_p2: promptAnswer });
+                            if(promptAnswer!=q2_A_p2) alert("[wrong answer]: "+q2_A_p2);
                             break;
                         case 2: 
                             await updateDoc(docRef, { q2_A_p3: promptAnswer });
+                            if(promptAnswer!=q2_A_p3) alert("[wrong answer]: "+q2_A_p3);
                             break;
                         case 3:
                             await updateDoc(docRef, { q2_A_p4: promptAnswer });
+                            if(promptAnswer!=q2_A_p4) alert("[wrong answer]: "+q2_A_p4);
                             break;
                         case 4: 
                             await updateDoc(docRef, { q2_A_p5: promptAnswer });
+                            if(promptAnswer!=q2_A_p5) alert("[wrong answer]: "+q2_A_p5);
                             break;
                     }
                 }else if(strategyId==1){ //B전략
                     switch(promptIdx){
                         case 0: 
                             await updateDoc(docRef, { q2_B_p1: promptAnswer });
+                            if(promptAnswer!=q2_B_p1) alert("[wrong answer]: "+q2_B_p1);
                             break;
                         case 1: 
                             await updateDoc(docRef, { q2_B_p2: promptAnswer });
+                            if(promptAnswer!=q2_B_p2) alert("[wrong answer]: "+q2_B_p2);
                             break;
                         case 2: 
                             await updateDoc(docRef, { q2_B_p3: promptAnswer });
+                            if(promptAnswer!=q2_B_p3) alert("[wrong answer]: "+q2_B_p3);
                             break;
                         case 3:
                             await updateDoc(docRef, { q1_B_p4: promptAnswer });
+                            if(promptAnswer!=q1_B_p4) alert("[wrong answer]: "+q1_B_p4);
                             break;
                     }
                 }else if(strategyId==2){ //C전략
                     switch(promptIdx){
                         case 0: 
                             await updateDoc(docRef, { q2_C_p1: promptAnswer });
+                            if(promptAnswer!=q2_C_p1) alert("[wrong answer]: "+q2_C_p1);
                             break;
                         case 1: 
                             await updateDoc(docRef, { q2_C_p2: promptAnswer });
+                            if(promptAnswer!=q2_C_p2) alert("[wrong answer]: "+q2_C_p2);
                             break;
                         case 2: 
                             await updateDoc(docRef, { q2_C_p3: promptAnswer });
+                            if(promptAnswer!=q2_C_p3) alert("[wrong answer]: "+q2_C_p3);
                             break;
                         case 3:
                             await updateDoc(docRef, { q2_C_p4: promptAnswer });
+                            if(promptAnswer!=q2_C_p4) alert("[wrong answer]: "+q2_C_p4);
                             break;
                     }
                 }
@@ -197,48 +277,61 @@ const Prompt =(props)=>{
                     switch(promptIdx){
                         case 0: 
                             await updateDoc(docRef, { q3_A_p1: promptAnswer });
+                            if(promptAnswer!=q3_A_p1) alert("[wrong answer]: "+q3_A_p1);
                             break;
                         case 1: 
                             await updateDoc(docRef, { q3_A_p2: promptAnswer });
+                            if(promptAnswer!=q3_A_p2) alert("[wrong answer]: "+q3_A_p2);
                             break;
                         case 2: 
                             await updateDoc(docRef, { q3_A_p3: promptAnswer });
+                            if(promptAnswer!=q3_A_p3) alert("[wrong answer]: "+q3_A_p3);
                             break;
                         case 3:
                             await updateDoc(docRef, { q3_A_p4: promptAnswer });
+                            if(promptAnswer!=q3_A_p4) alert("[wrong answer]: "+q3_A_p4);
                             break;
                         case 4: 
                             await updateDoc(docRef, { q3_A_p5: promptAnswer });
+                            if(promptAnswer!=q3_A_p5) alert("[wrong answer]: "+q3_A_p5);
                             break;
                     }
                 }else if(strategyId==1){ //B전략
                     switch(promptIdx){
                         case 0: 
                             await updateDoc(docRef, { q3_B_p1: promptAnswer });
+                            if(promptAnswer!=q2_C_p4) alert("[wrong answer]: "+q2_C_p4);
                             break;
                         case 1: 
                             await updateDoc(docRef, { q3_B_p2: promptAnswer });
+                            if(promptAnswer!=q3_B_p1) alert("[wrong answer]: "+q3_B_p1);
                             break;
                         case 2: 
                             await updateDoc(docRef, { q3_B_p3: promptAnswer });
+                            if(promptAnswer!=q3_B_p3) alert("[wrong answer]: "+q3_B_p3);
                             break;
                         case 3:
                             await updateDoc(docRef, { q3_B_p4: promptAnswer });
+                            if(promptAnswer!=q3_B_p4) alert("[wrong answer]: "+q3_B_p4);
                             break;
                     }
                 }else if(strategyId==2){ //C전략
                     switch(promptIdx){
                         case 0: 
                             await updateDoc(docRef, { q3_C_p1: promptAnswer });
+                            if(promptAnswer!=q3_C_p1) alert("[wrong answer]: "+q3_C_p1);
                             break;
                         case 1: 
                             await updateDoc(docRef, { q3_C_p2: promptAnswer });
+                            if(promptAnswer!=q3_C_p2) alert("[wrong answer]: "+q3_C_p2);
                             break;
                         case 2: 
                             await updateDoc(docRef, { q3_C_p3: promptAnswer });
+                             if(promptAnswer!=q3_C_p3) alert("[wrong answer]: "+q3_C_p3);
                             break;
                         case 3:
                             await updateDoc(docRef, { q3_C_p4: promptAnswer });
+                            if(promptAnswer!=q3_C_p4) alert("[wrong answer]: "+q3_C_p4);
                             break;
                     }
                 }
