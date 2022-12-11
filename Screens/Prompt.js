@@ -13,11 +13,11 @@ const Prompt =(props)=>{
     //출력할 정보
     const [studentId, setStudentId] = useState(""); //불러온 studentId
     const [testId, setTestId] = useState(""); //불러온 testId
-    const [printQuestion,setPrintQuestion] = useState("") //print할 question 지문 저장
     const [questionId, setQuestionId] = useState(""); //넘겨줄 question key저장
-    const [printPrompt, setPrintPrompt] = useState(""); // 출력할 prompt
-    const [nowPrompt, setNowPrompt] = useState(0);
     const [strategyId, setStrategyId] = useState();
+    const [printQuestion,setPrintQuestion] = useState("") //print할 question 지문 저장
+    const [questionCount, setQuestionCount] = useState();
+    
     //const [choiceStrategy, setChoiceStrategy] = useState();
 
 
@@ -29,7 +29,19 @@ const Prompt =(props)=>{
     const ReadPromptDB = async()=>{ 
         const questionId = props.route.params.questionId;
         const strategyId = props.route.params.strategyId;
+        const studentId = props.route.params.studentId;
+        const testId = props.route.params.testId;
+        const questionPrint = props.route.params.questionPrint;
+        const Count = props.route.params.Count;
+       
+        setStudentId(studentId);
+        setTestId(testId);
+        setQuestionId(questionId);
+        setStrategyId(strategyId);
+        setPrintQuestion(questionPrint);
+        setQuestionCount(Count);
 
+        console.log("Prompt CountNum", Count);
         try{
             //questionId가 일치하는 prompt 쿼리
             const q1 = await query( collection(db, "Prompt"), where('questionId',"==", questionId))
@@ -80,9 +92,8 @@ const Prompt =(props)=>{
             }catch(error){}
         }
 
-        if(countPrompt == 0) {
+        if(countPrompt == 1) {
             backStrategy();
-             console.log('change'+ countPrompt);
         }
         else{
             // nowCount = nowCount-1;
@@ -99,8 +110,9 @@ const Prompt =(props)=>{
             testId: testId,         //시험id
             questionId: questionId, //문제id
             strategyId: strategyId, //전략id
-            printQuestion: printQuestion,
-            FinishState: false, //해당 전략 완료
+            questionPrint: printQuestion,
+            BackCount: questionCount,
+            Count: questionCount
         })
     }
 

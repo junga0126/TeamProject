@@ -16,7 +16,8 @@ const Home =(props)=>{
                 alert("success Test")
                 props.navigation.navigate("StartTest" ,{
                     studentId: studentId,
-                    testId: row.data().testId
+                    testId: row.data().testId,
+                    Count: 3
                 })
             })
         }catch(error){ console.log(error.message)}

@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Button, TextInput,TouchableOpacity } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { db } from '../firebaseConfig';
 import { collection, getDocs, where, query } from 'firebase/firestore';
 
@@ -14,31 +14,38 @@ const Strategy =(props)=>{
     const [testId, setTestId] = useState(""); //불러온 testId
     const [printQuestion,setPrintQuestion] = useState("") //print할 question
     const [questionId, setQuestionId] = useState(""); //넘겨줄 question key저장
+    const [questionNum, setQuestionNum] = useState("");
     const [firstPromptFlag,setFirstPromptFlag] = useState(false)
     const [secondPromptFlag,setSecondPromptFlag] = useState(false)
     const [thridthPromptFlag,setThridPromptFlag] = useState(false)
-
-    //strategy상태가 모두 true이면 question이 false로 전환
-
-    ///이전에 변경한 값이 false로 저장되어 있으려면 어떤 방법을 사용해야 할까??
-   
-   
+    const [questionCount, setQuestionCount] = useState();
+    const [back, setBack] = useState();
     //strategy정보를 가져옴(Screen시작 시 바로 실행)
     const StrategyDB = async()=>{
         const studentId = props.route.params.studentId;
         const testId = props.route.params.testId;
         const questionId = props.route.params.questionId;
         const questionPrint = props.route.params.questionPrint;
+        const questionNum = props.route.params.questionNum;
+        const count = props.route.params.Count;
+        
+        const BackCount = props.route.params.BackCount;
+        console.log(" Strategy Back",BackCount);
+        setBack(BackCount);
+
+
+        setQuestionCount(count);
+        console.log("StartTest Strategy",count);
+
+
         setStudentId(studentId);
         setTestId(testId);
         setQuestionId(questionId);
         setPrintQuestion(questionPrint);
-
-        //
-        let finish = props.route.params.FinishState;
-        console.log(finish);
-      
-        //
+        if(questionNum == 3)  setQuestionNum(1);
+        else if(questionNum == 2) setQuestionNum(2);
+        else if(questionNum == 1) setQuestionNum(3);
+        //setQuestionNum(questionNum);
 
         try{
             const q = await query( collection(db, "Question"), where('key',"==", questionId)) 
@@ -54,11 +61,29 @@ const Strategy =(props)=>{
         }catch(error) { console.log(error.message) }
     }
 
-    //Screen시작하자마자 실행(문제 출력을 위해)
-    if(flag == true){
-        StrategyDB()
-        setFlag(false);
+    const nextQuestion = ()=>{
+        if(firstPromptFlag==true && secondPromptFlag==true && thridthPromptFlag==true){
+
+            props.navigation.navigate("StartTest", {
+                studentId: studentId,
+                testId: testId,
+                questionId: questionId,
+                nowQuestion: questionNum,
+                Count: (questionCount-1)
+            })
+        } 
+        else alert("Complete all strategies..");
     }
+    //Screen시작하자마자 실행(문제 출력을 위해)
+    // if(flag == true){
+    //     StrategyDB()
+    //     setFlag(false);
+    // }
+    useEffect(()=>{
+         StrategyDB()
+    },[props])
+
+   
 
     return(
         <View style={styles.mainView}>
@@ -66,7 +91,7 @@ const Strategy =(props)=>{
             <Text>Which strategy do you want to try?</Text> 
            
             <TouchableOpacity 
-                style={{witdth: "75%", backgroundColor:firstPromptFlag?"white":"skyblue"}}
+                style={{witdth: "75%", backgroundColor:firstPromptFlag?"#bbb":"skyblue"}}
                 onPress={()=>{
                     props.navigation.navigate("Prompt", {
                         studentId: studentId,
@@ -75,6 +100,7 @@ const Strategy =(props)=>{
                         strategyId: 0,
                         questionPrint: printQuestion,
                         choiceStrategy: AStrategy,
+                        Count: questionCount
                     })
                     setFirstPromptFlag(true)
                 }}
@@ -84,7 +110,7 @@ const Strategy =(props)=>{
             </TouchableOpacity>
 
             <TouchableOpacity 
-                style={{witdth: "75%", backgroundColor:"skyblue"}}
+                style={{witdth: "75%", backgroundColor:secondPromptFlag?"#bbb":"skyblue"}}
                 onPress={()=>{
                     props.navigation.navigate("Prompt", {
                         studentId: studentId,
@@ -93,6 +119,7 @@ const Strategy =(props)=>{
                         strategyId: 1,
                         questionPrint: printQuestion,
                         choiceStrategy: BStrategy,
+                        Count: questionCount
                     })
                     setSecondPromptFlag(true)
                 }}
@@ -102,15 +129,16 @@ const Strategy =(props)=>{
             </TouchableOpacity>
 
             <TouchableOpacity 
-                style={{witdth: "75%", backgroundColor:"skyblue"}}
+                style={{witdth: "75%", backgroundColor:thridthPromptFlag?"#bbb":"skyblue"}}
                 onPress={()=>{
                     props.navigation.navigate("Prompt", {
                         studentId: studentId,
                         testId: testId,
                         questionId: questionId,
                         strategyId: 2,
-                        printQuestion: printQuestion,
+                        questionPrint: printQuestion,
                         choiceStrategy: CStrategy,
+                        Count: questionCount
                     })
                     setThridPromptFlag(true)
                 }}
@@ -118,6 +146,10 @@ const Strategy =(props)=>{
                 >
                 <Text>{CStrategy}</Text>
             </TouchableOpacity> 
+            <Button
+                title = 'Next'
+                onPress= {nextQuestion}
+            />
         </View>
     )
 }
