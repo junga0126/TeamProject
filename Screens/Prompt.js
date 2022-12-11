@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Button, TextInput,TouchableOpacity } from 'react-native';
 import { useEffect, useState } from 'react';
 import { db } from '../firebaseConfig';
-import { collection, getDocs, where, query } from 'firebase/firestore';
+import { collection, getDocs, where, query, doc, updateDoc } from 'firebase/firestore';
 
 
 const Prompt =(props)=>{
@@ -18,7 +18,7 @@ const Prompt =(props)=>{
     const [printQuestion,setPrintQuestion] = useState("") //print할 question 지문 저장
     const [questionCount, setQuestionCount] = useState();
     
-    //const [choiceStrategy, setChoiceStrategy] = useState();
+    const [promptAnswer, setPromptAnswer] = useState(""); //학생 입력 답 저장
 
 
     useEffect(()=>{
@@ -70,15 +70,186 @@ const Prompt =(props)=>{
     }
 
     const showPrompt =  async() =>{
-        //처음에만 불러와서
-        // flag를 usestate로 해도 오류...
-        // count를 불러와서 값을 변경해야 한다...
+        const strategyId = props.route.params.strategyId;
+        const studentId = props.route.params.studentId;
+        const testId = props.route.params.testId;
+        const Count = props.route.params.Count;
+        //promptIdx
+        //학생 답안 저장
+        try{
+            const q = await query( collection(db, "AnswerStudent"), where('testId',"==", testId)) 
+            const answer = await getDocs(q); //test id일치 답안지
+            let docID; //answer의 DB ID
+            answer.docs.map((row, idx)=>{   //학생 아이디 일치 확인************질문 
+                docID = row.id;
+            })
+            const docRef = doc(db, "AnswerStudent", docID); //해당 id가진 user업데이트
 
-        //strategy에서 prompt가 다 완료되면 사
-        //countPrompt
+            /*  
+                Count가      3-(1번문제),    2-(2번문제),    1-(3번문제)
+                strategyId가 0-(A전략),      1-(B전략),      2-(C전략)
+                promptIdx    0-(1번 prompt), 1-(2번 prompt)  2-(3번 prompt)    
+            */
+
+            if(Count==3){ //1번문제
+                if(strategyId==0){ //A전략
+                    switch(promptIdx){
+                        case 0: 
+                            await updateDoc(docRef, { q1_A_p1: promptAnswer });
+                            break;
+                        case 1: 
+                            await updateDoc(docRef, { q1_A_p2: promptAnswer });
+                            break;
+                        case 2: 
+                            await updateDoc(docRef, { q1_A_p3: promptAnswer });
+                            break;
+                        case 3:
+                            await updateDoc(docRef, { q1_A_p4: promptAnswer });
+                            break;
+                        case 4: 
+                            await updateDoc(docRef, { q1_A_p5: promptAnswer });
+                            break;
+                    }
+                }else if(strategyId==1){ //B전략
+                    switch(promptIdx){
+                        case 0: 
+                            await updateDoc(docRef, { q1_B_p1: promptAnswer });
+                            break;
+                        case 1: 
+                            await updateDoc(docRef, { q1_B_p2: promptAnswer });
+                            break;
+                        case 2: 
+                            await updateDoc(docRef, { q1_B_p3: promptAnswer });
+                            break;
+                        case 3:
+                            await updateDoc(docRef, { q1_B_p4: promptAnswer });
+                            break;
+                    }
+                }else if(strategyId==2){ //C전략
+                    switch(promptIdx){
+                        case 0: 
+                            await updateDoc(docRef, { q1_C_p1: promptAnswer });
+                            break;
+                        case 1: 
+                            await updateDoc(docRef, { q1_C_p2: promptAnswer });
+                            break;
+                        case 2: 
+                            await updateDoc(docRef, { q1_C_p3: promptAnswer });
+                            break;
+                        case 3:
+                            await updateDoc(docRef, { q1_C_p4: promptAnswer });
+                            break;
+                    }
+                }
+            }else if(Count==2){ //2번문제
+                if(strategyId==0){ //A전략
+                    switch(promptIdx){
+                        case 0: 
+                            await updateDoc(docRef, { q2_A_p1: promptAnswer });
+                            break;
+                        case 1: 
+                            await updateDoc(docRef, { q2_A_p2: promptAnswer });
+                            break;
+                        case 2: 
+                            await updateDoc(docRef, { q2_A_p3: promptAnswer });
+                            break;
+                        case 3:
+                            await updateDoc(docRef, { q2_A_p4: promptAnswer });
+                            break;
+                        case 4: 
+                            await updateDoc(docRef, { q2_A_p5: promptAnswer });
+                            break;
+                    }
+                }else if(strategyId==1){ //B전략
+                    switch(promptIdx){
+                        case 0: 
+                            await updateDoc(docRef, { q2_B_p1: promptAnswer });
+                            break;
+                        case 1: 
+                            await updateDoc(docRef, { q2_B_p2: promptAnswer });
+                            break;
+                        case 2: 
+                            await updateDoc(docRef, { q2_B_p3: promptAnswer });
+                            break;
+                        case 3:
+                            await updateDoc(docRef, { q1_B_p4: promptAnswer });
+                            break;
+                    }
+                }else if(strategyId==2){ //C전략
+                    switch(promptIdx){
+                        case 0: 
+                            await updateDoc(docRef, { q2_C_p1: promptAnswer });
+                            break;
+                        case 1: 
+                            await updateDoc(docRef, { q2_C_p2: promptAnswer });
+                            break;
+                        case 2: 
+                            await updateDoc(docRef, { q2_C_p3: promptAnswer });
+                            break;
+                        case 3:
+                            await updateDoc(docRef, { q2_C_p4: promptAnswer });
+                            break;
+                    }
+                }
+
+            }else if(Count==1){ //3번문제
+                if(strategyId==0){ //A전략
+                    switch(promptIdx){
+                        case 0: 
+                            await updateDoc(docRef, { q3_A_p1: promptAnswer });
+                            break;
+                        case 1: 
+                            await updateDoc(docRef, { q3_A_p2: promptAnswer });
+                            break;
+                        case 2: 
+                            await updateDoc(docRef, { q3_A_p3: promptAnswer });
+                            break;
+                        case 3:
+                            await updateDoc(docRef, { q3_A_p4: promptAnswer });
+                            break;
+                        case 4: 
+                            await updateDoc(docRef, { q3_A_p5: promptAnswer });
+                            break;
+                    }
+                }else if(strategyId==1){ //B전략
+                    switch(promptIdx){
+                        case 0: 
+                            await updateDoc(docRef, { q3_B_p1: promptAnswer });
+                            break;
+                        case 1: 
+                            await updateDoc(docRef, { q3_B_p2: promptAnswer });
+                            break;
+                        case 2: 
+                            await updateDoc(docRef, { q3_B_p3: promptAnswer });
+                            break;
+                        case 3:
+                            await updateDoc(docRef, { q3_B_p4: promptAnswer });
+                            break;
+                    }
+                }else if(strategyId==2){ //C전략
+                    switch(promptIdx){
+                        case 0: 
+                            await updateDoc(docRef, { q3_C_p1: promptAnswer });
+                            break;
+                        case 1: 
+                            await updateDoc(docRef, { q3_C_p2: promptAnswer });
+                            break;
+                        case 2: 
+                            await updateDoc(docRef, { q3_C_p3: promptAnswer });
+                            break;
+                        case 3:
+                            await updateDoc(docRef, { q3_C_p4: promptAnswer });
+                            break;
+                    }
+                }
+
+            }
+          }catch(error){ console.log(error.message)}
+
+
+
         let newIdx = promptIdx +1 
         setPromptIdx(newIdx)
-
 
         if(nowCount == 100){
             const questionId = props.route.params.questionId;
@@ -116,10 +287,21 @@ const Prompt =(props)=>{
         })
     }
 
+    const answerChangeInput = (event) =>{
+        console.log("Input Answer", event);
+        setPromptAnswer(event);
+    }
+
     return(
         <View>
             {/* <Text>{nowPrompt}</Text> */}
             <Text>{promptData[promptIdx]}</Text>
+            <TextInput
+                value = {promptAnswer}
+                onChangeText = {answerChangeInput}
+                style={{backgroundColor:"gray"}}
+                placeholder = 'Write your answer'
+            />
             <TouchableOpacity 
                 style={{witdth: "75%", backgroundColor:"skyblue"}}
                 onPress={()=>{

@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
 import { useState, useEffect } from 'react';
 import { db } from '../firebaseConfig';
-import { collection, getDocs, where, query, connectFirestoreEmulator, setIndexConfiguration } from 'firebase/firestore';
+import { collection, getDocs, where, query, updateDoc, doc } from 'firebase/firestore';
 
 //Test첫 페이지
 const StartTest =(props)=>{
@@ -26,6 +26,44 @@ const StartTest =(props)=>{
         setStAnswer(event)
     }
 
+    const updateAnswer = async() =>{
+        const st_Id = props.route.params.studentId;
+        const t_Id = props.route.params.testId;
+        const Count = props.route.params.Count; 
+
+        try{
+            const q = await query( collection(db, "AnswerStudent"), where('testId',"==", t_Id)) 
+            const answer = await getDocs(q); //test id일치 답안지
+            let docID; //answer의 DB ID
+            answer.docs.map((row, idx)=>{
+                //학생 아이디 일치 확인************질문
+                // if(doc.data().st_id == st_Id) 
+                docID = row.id;
+            })
+            const docRef = doc(db, "AnswerStudent", docID); //해당 id가진 user업데이트
+
+            //Count가      3-(1번문제),    2-(2번문제),    1-(3번문제)
+            switch(Count){
+                case 3:
+                    await updateDoc(docRef, { firstAnswer: firstAnswer }); 
+                    break;
+                case 2:
+                    await updateDoc(docRef, { secondAnswer: firstAnswer });
+                    break;
+                case 1:
+                    await updateDoc(docRef, { thirdAnswer: firstAnswer });
+                    break;
+            }
+          }catch(error){ console.log(error.message)}
+        props.navigation.navigate("Strategy", {
+            studentId: studentId,
+            testId: testId,
+            questionPrint: printQuestion,
+            questionId: questionId,
+            Count: questionCount
+        })
+    }
+
     //Question DB: testid와 일치하는 시험지 가져와 문제 출력
     const QuestionDB = async ()=>{
         const st_Id = props.route.params.studentId;
@@ -46,11 +84,7 @@ const StartTest =(props)=>{
             setSecondQuestionFlag(true);
             setThridQuestionFlag(true);
         } 
-
-         
-        
     
-    // QuestionDB() useMemo useEffect, flag = true false
         try{
             const q = await query( collection(db, "Test"), where('testId',"==", t_Id)) 
             const Test = await getDocs(q); //현재 test 시험DB
@@ -62,8 +96,6 @@ const StartTest =(props)=>{
             })
             var i = 0;
             for(i=0; i<3; i++) console.log(QuestionArray[i])
-
-
 
              //count에 따라 다른 문제지문이 출력
             if(Count == 3){
@@ -111,6 +143,11 @@ const StartTest =(props)=>{
         }
         else if(firstQuestionFlag==true && secondQuestionFlag==true && thridQuestionFlag==true){
             alert("clear");
+            props.navigation.navigate("Home", {
+                studentId: studentId,
+                testId: testId,
+                finish: true
+            })
         }else alert("Complete all question..");
     }
 
@@ -130,15 +167,7 @@ const StartTest =(props)=>{
             />
             <Button
                 title = 'Submit'
-                onPress={()=>{
-                    props.navigation.navigate("Strategy", {
-                        studentId: studentId,
-                        testId: testId,
-                        questionPrint: printQuestion,
-                        questionId: questionId,
-                        Count: questionCount
-                    })
-                }}
+                onPress={updateAnswer}
             />
              <Button
                 title = 'Next'
