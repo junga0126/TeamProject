@@ -4,7 +4,29 @@ import { db } from '../firebaseConfig';
 import { collection, getDocs,where, query, addDoc } from 'firebase/firestore';
 const Home =(props)=>{
     const [testNum, setTestNum] = useState(); //테스트 num DB
+    const [studentId, setStudentId] = useState(""); //불러온 studentId
 
+
+    const ReviewDB = async ()=>{
+        const studentId = props.route.params.student; //login성공- 얻은 학생 아이디 
+        try{
+            const q = await query( collection(db, "Test"), where('state',"==", "true"))
+            const ReadTest = await getDocs(q);
+            let ChoiceTest;
+
+            //활성화된 test확인
+            ReadTest.docs.map((row, idx) =>{
+                setTestNum(row.data().testId) //최종 test DB 저장 
+                ChoiceTest = row.data().testId;
+            })
+              
+            props.navigation.navigate("ReviewNote" ,{
+                studentId: studentId,
+                testId: ChoiceTest
+            })
+        }catch(error){ console.log(error.message)}
+
+    }
     //Test의 state상태가 true인 test를 찾아 저장하기
     const TestDB = async ()=>{  
         const studentId = props.route.params.student; //login성공- 얻은 학생 아이디 
@@ -29,6 +51,16 @@ const Home =(props)=>{
                     st_id: studentId,
                     testId: ChoiceTest,
                     score: 0,
+                    markState: false,
+                    q1_A: false,
+                    q1_B: false,
+                    q1_C: false,
+                    q2_A: false,
+                    q2_B: false,
+                    q2_C: false,
+                    q3_A: false,
+                    q3_B: false,
+                    q3_C: false,
                     firstAnswer: "-",
                     secondAnswer: "-",
                     thirdAnswer: "-",
@@ -88,6 +120,10 @@ const Home =(props)=>{
             <Button
                 title = 'Test'
                 onPress={TestDB}
+            />
+            <Button
+                title = 'ReviewNote'
+                onPress={ReviewDB}
             />
         </View>
     );

@@ -8,6 +8,7 @@ import Test from './Screens/Test';
 import StartTest from './Screens/StartTest';
 import Strategy from './Screens/Strategy';
 import Prompt from './Screens/Prompt';
+import ReviewNote from './Screens/ReviewNote';
 
 const Stack = createStackNavigator();
 export default function App() {
@@ -53,6 +54,11 @@ export default function App() {
           name='Prompt' 
           component={Prompt}
           options = {{title:"Prompt Screen"}}
+        />
+        <Stack.Screen 
+          name='ReviewNote' 
+          component={ReviewNote}
+          options = {{title:"ReviewNote Screen"}}
         />
       </Stack.Navigator>
     </NavigationContainer>
